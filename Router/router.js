@@ -12,6 +12,13 @@ router.get('/testings', (req, res) => {
     })
 })
 
+const trying = async (password) => {
+    const user = await Testing.find({email: 'adeyida.solarin@gmail.com'})
+    const result = await user.comparePassword(password)
+    console.log(result)
+}
+trying('jgjjgjdggd' )
+
 router.get('/testings/:id', (req, res) => {
     const _id = req.params.id
     Testing.find({_id}).then((doc) => {

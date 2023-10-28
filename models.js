@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
+const bcrypt = require('bcryptjs')
 
 const { Schema } = require('mongoose')
 
@@ -41,6 +42,33 @@ const newSchema = new Schema({
         required: true
     }
 }, {timestamps:true})
+
+newSchema.pre('save', function(next){  //note that this refers to the document
+    if(this.isModified('Password')){
+        bcrypt.hash(this.Password, 8, (err, hash) => {
+            if(err){
+                return next(err)
+            }
+            this.Password = hash
+            next()
+        })
+    }
+}) 
+
+newSchema.methods.comparePassword = async function(password){
+    if(!password){
+        throw new Error('Password i missingb')
+    }
+    try{
+        const result = await bcrypt.compare(password, this.Password)
+        return result
+    }
+    catch(e){
+        console.log('error while comoparinbg', e)
+    }
+}
+
+
 
 const Testing = mongoose.model('Testing', newSchema)
 
