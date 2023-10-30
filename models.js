@@ -55,19 +55,6 @@ newSchema.pre('save', function(next){  //note that this refers to the document
     }
 }) 
 
-newSchema.methods.comparePassword = async function(password){
-    if(!password){
-        throw new Error('Password i missingb')
-    }
-    try{
-        const result = await bcrypt.compare(password, this.Password)
-        return result
-    }
-    catch(e){
-        console.log('error while comoparinbg', e)
-    }
-}
-
 
 
 const Testing = mongoose.model('Testing', newSchema)
